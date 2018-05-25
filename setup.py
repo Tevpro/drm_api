@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="drm_api",
+    name="oracle_drm_api",
     version="0.1.0",
     author="Keith Kikta",
     author_email="keith.kikta@tevpro.com",
