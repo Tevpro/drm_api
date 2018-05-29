@@ -64,6 +64,60 @@ class Client:
     def delete_book(self, name: str, access: Access = Access.Standard):
         return self.get_client.service.deleteBook(bookName=name, access=access.value)
 
+    def delete_compare(self, name: str, access: Access = Access.Standard):
+        return self.get_client.service.deleteCompare(compareName=name, access=access.value)
+
+    def delete_domain(self, name: str):
+        return self.get_client.service.deleteDomain(name=name)
+
+    def delete_hier(self, name: str, version: str):
+        return self.get_client.service.deleteHier(versionName=version, hierName=name)
+
+    def delete_orphan_nodes(self, version: str, nodes: list, merge: list):
+        return self.get_client.service.deleteOrphanNodes(versionName=version, nodeNames=nodes, mergeNodes=merge)
+
+    def delete_blender(self, name: str, access: Access = Access.Standard):
+        return self.get_client.service.deleteBlender(blenderName=name, access=access.value)
+
+    def delete_import(self, name: str, access: Access = Access.Standard):
+        return self.get_client.service.deleteImport(importName=name, access=access.value)
+
+    def delete_node_type(self, name: str):
+        return self.get_client.service.deleteNodeType(nodeTypeName=name)
+
+    def delete_hier_group(self, name: str):
+        return self.get_client.service.deleteHierGroup(groupName=name)
+
+    def delete_validation(self, name: str):
+        return self.get_client.service.deleteValidation(validationName=name)
+
+    def delete_user(self, name: str):
+        return self.get_client.service.deleteUser(userName=name)
+
+    def delete_request(self, id: int):
+        return self.get_client.service.deleteRequest(requestId=id)
+
+    def delete_node(self, version: str, hierarchy: str, node: str, merge: str = "", destroy: bool = False):
+        return self.get_client.service.deleteNode(versionName=version, hierName=hierarchy, nodeName=node,
+                                                  mergeNodeName=merge, destroyNode=destroy)
+
+    def delete_node_access_group(self, name: str):
+        return self.get_client.service.deleteNodeAccessGroup(nodeAccessGroupName=name)
+
+    def delete_nodes(self, version: str, hierarchy: str, nodes: list =[], merge: list = [],
+                     destroy: bool = False):
+        return self.get_client.service.deleteNodes(versionName=version, hierName=hierarchy, nodeNameList=nodes,
+                                                   mergeNodeNameList=merge, destroyNodes=destroy)
+
+    def delete_glyph(self, name: str):
+        return self.get_client.service.deelteGlyph(glyphName=name)
+
+    def get_node_types(self):
+        resp = self.get_client.service.getNodeTypes()
+        if resp.status_code == 500:
+            return Error.from_response(resp)
+        return resp
+
     def get_prop_def(self, name):
         return self.get_client.service.getPropDef(propDefName=name)
 
