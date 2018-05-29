@@ -129,8 +129,27 @@ class Client:
         return JobInfo.from_book(response, self)
 
     def job_status(self, id=None, name=None):
-        return self.get_client.service.getJobStatus(jobInfo={'id': id })
+        return self.get_client.service.getJobStatus(jobInfo={'id': id})
 
+class Error:
+    def __init__(self, fault_code, fault_string, message, code: int=0):
+        self.fault_code = fault_code
+        self.fault_string = fault_string
+        self.message = message
+        self.code = code
+
+    def __str__(self):
+        return self.message
+
+    @staticmethod
+    def from_response(content):
+        root = etree.fromstring(content.text)
+        return Error(
+            fault_code=root.find('.//faultcode').text,
+            fault_string=root.find(".//faultstring").text,
+            message=root.find('.//Message', namespaces=root.nsmap).text,
+            code=root.find('.//Code', namespaces=root.nsmap).text
+        )
 
 class JobInfo:
 
