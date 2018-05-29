@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="oracle_drm_api",
-    version="0.1.0",
+    version="0.2.0",
     author="Keith Kikta",
     author_email="keith.kikta@tevpro.com",
     description="Oracle Data Relationship Management API Client",
