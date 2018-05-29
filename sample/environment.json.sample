@@ -1,0 +1,6 @@
+{
+  "local": {
+    "web": "server=<drm api server>;port=28080;username=<api user>;password=<api password>;secure=false;path=oracle-epm-drm-webservices;service=DrmService",
+    "drm": "server=<drm server>;port=5240;path=oracle/drm/apiadapter;secure=false"
+  }
+}
