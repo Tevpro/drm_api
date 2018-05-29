@@ -10,8 +10,12 @@ class Client:
 
     def __init__(self, web_service: Api = None, drm_adapter: Api = None):
         if web_service:
+            if type(web_service) == str:
+                web_service = Api(web_service)
             self.api = web_service
         if drm_adapter:
+            if type(drm_adapter) == str:
+                drm_adapter = Api(drm_adapter)
             self.adapter = drm_adapter
         Access = self.enum(Standard='Standard', System='System', User='User')
 
@@ -33,7 +37,7 @@ class Client:
 
     @property
     def get_client(self):
-        ws = self.api
+        ws: Api = self.api
         client = zeepClient(ws.end_point + '?wsdl', wsse=UsernameToken(ws.username, ws.password))
         client.set_default_soapheaders([self.get_header])
         client.raw_response = True
