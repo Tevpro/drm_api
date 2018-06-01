@@ -12,6 +12,8 @@ def get_env():
 
 
 env = get_env()
-client = Client(web_service=env["local"]["web"], drm_adapter=Api(env["local"]["drm"]))
+client = Client(web_service=env["stage"]["web"], drm_adapter=Api(env["stage"]["drm"]))
 resp = client.get_node_types()
-print(resp.content)
+print(len(resp))
+for node in resp:
+    print(node.name)
