@@ -40,8 +40,6 @@ class Client:
         ws: Api = self.api
         client = zeepClient(ws.end_point + '?wsdl', wsse=UsernameToken(ws.username, ws.password))
         client.set_default_soapheaders([self.get_header])
-        client.raw_response = True
-        #with client.options(raw_response=False):
         return client
 
     @property
@@ -113,10 +111,19 @@ class Client:
         return self.get_client.service.deelteGlyph(glyphName=name)
 
     def get_node_types(self):
-        resp = self.get_client.service.getNodeTypes()
-        if resp.status_code == 500:
-            return Error.from_response(resp)
-        return resp
+        return self.get_client.service.getNodeTypes()
+
+    def get_export_names(self):
+        return self.get_client.service.getExportNames()
+
+    def get_book_names(self):
+        return self.get_client.service.getBookNames()
+
+    def get_valididations(self):
+        return self.get_client.service.getValidations()
+
+    def get_queries(self, is_global: bool=False, queries: list=[]):
+        return self.get_client.service.getQueries(**{'global':is_global, 'quertyNamesList':queries})
 
     def get_prop_def(self, name):
         return self.get_client.service.getPropDef(propDefName=name)
@@ -124,32 +131,11 @@ class Client:
     def start_book(self, name: str, from_version: str, to_version: str=None, access: Access = Access.Standard):
         if not to_version:
             to_version = from_version
-        response = self.get_client.service.startBookByName(bookName=name, access=access.value, fromVersionName=from_version,
+        return self.get_client.service.startBookByName(bookName=name, access=access.value, fromVersionName=from_version,
                                                        toVersionName=to_version)
-        return JobInfo.from_book(response, self)
 
     def job_status(self, id=None, name=None):
         return self.get_client.service.getJobStatus(jobInfo={'id': id})
-
-class Error:
-    def __init__(self, fault_code, fault_string, message, code: int=0):
-        self.fault_code = fault_code
-        self.fault_string = fault_string
-        self.message = message
-        self.code = code
-
-    def __str__(self):
-        return self.message
-
-    @staticmethod
-    def from_response(content):
-        root = etree.fromstring(content.text)
-        return Error(
-            fault_code=root.find('.//faultcode').text,
-            fault_string=root.find(".//faultstring").text,
-            message=root.find('.//Message', namespaces=root.nsmap).text,
-            code=root.find('.//Code', namespaces=root.nsmap).text
-        )
 
 class JobInfo:
 
@@ -165,23 +151,6 @@ class JobInfo:
         self.percent = percent
         self.message = message
         self.client = client
-
-    @staticmethod
-    def from_book(content, client=None):
-        root = etree.fromstring(content.text)
-        name = root.find('.//{http://drm.webservices.epm.oracle}name', namespaces=root.nsmap)
-        machine = root.find('.//{http://drm.webservices.epm.oracle}machineName', namespaces=root.nsmap)
-        return JobInfo(
-            id=root.find('.//{http://drm.webservices.epm.oracle}id', namespaces=root.nsmap).text,
-            name=name.text if name is not None else None,
-            machine=machine.text if machine is not None else None,
-            process_id=root.find('.//{http://drm.webservices.epm.oracle}processId', namespaces=root.nsmap).text,
-            thread_id=root.find('.//{http://drm.webservices.epm.oracle}threadId', namespaces=root.nsmap).text,
-            session=root.find('.//{http://drm.webservices.epm.oracle}session', namespaces=root.nsmap).text,
-            status=root.find('.//{http://drm.webservices.epm.oracle}status', namespaces=root.nsmap).text,
-            percent=root.find('.//{http://drm.webservices.epm.oracle}percentComplete', namespaces=root.nsmap).text,
-            message=root.find('.//{http://drm.webservices.epm.oracle}progressMessage', namespaces=root.nsmap).text,
-            client=client)
 
     @property
     def is_complete(self):
