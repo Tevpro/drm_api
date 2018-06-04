@@ -1,17 +1,20 @@
-import setuptools
+from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
 
-setuptools.setup(
+def readme():
+    with open("README.md", "r") as fh:
+        return fh.read()
+
+
+setup(
     name="oracle_drm_api",
-    version="0.3.0",
+    version="0.3.6",
     author="Keith Kikta",
     author_email="keith.kikta@tevpro.com",
     description="Oracle Data Relationship Management API Client",
-    long_description=long_description,
+    long_description=readme(),
     url="https://github.com/tevpro/drm_api",
-    packages=setuptools.find_packages(),
+    packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -19,6 +22,6 @@ setuptools.setup(
     ],
     install_requires=[
         'enum34;python_version<"3.4"',
-        'zeep == "2.5.0"'
+        'zeep >= 2.5.0'
     ]
 )
